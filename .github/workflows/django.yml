@@ -1,0 +1,26 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install dependencies
+      run: |
+        pip install django==5.2 selenium
+    - name: Install Firefox
+      run: sudo apt-get update && sudo apt-get install -y firefox geckodriver
+    - name: Run Tests
+      run: |
+        python manage.py collectstatic --noinput
+        python manage.py test
